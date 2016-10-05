@@ -6,6 +6,8 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var concat = require('gulp-concat');
+var preprocess = require('gulp-preprocess');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -48,4 +50,16 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('dev', function() {
+  gulp.src('./appsettings.js')
+    .pipe(preprocess({context: { NODE_ENV: 'development', DEBUG: true}}))
+    .pipe(gulp.dest('./www/js/'));
+});
+
+gulp.task('prod', function() {
+  gulp.src('./appsettings.js')
+    .pipe(preprocess({context: { NODE_ENV: 'production'}}))
+    .pipe(gulp.dest('./www/js/'));
 });
